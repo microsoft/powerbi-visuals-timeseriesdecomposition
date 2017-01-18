@@ -1,0 +1,14 @@
+{
+ "cranPackages": [
+ {
+ "name": "proto",
+"displayName": "proto: Prototype Object-Based Programming",
+"url": "https://cran.r-project.org/web/packages/proto/index.html" 
+},
+{
+ "name": "zoo",
+"displayName": "zoo: S3 Infrastructure for Regular and Irregular Time Series",
+"url": "https://cran.r-project.org/web/packages/zoo/index.html" 
+} 
+] 
+}
