@@ -391,7 +391,8 @@ if (exists("settings_extra_params_infoCol"))
     if(N < minSamples2run)
     {
       Value = NULL; Time = ts(); plotType = "empty"
-      pbiInfo ="Warning: Not enough samples for analysis"
+      pbiInfo = cutStr2Show("Warning: Not enough samples for analysis", strCex = 1.2, partAvailable = 0.95)
+      
     }
   }
   if(plotType != "empty")
@@ -400,19 +401,19 @@ if (exists("settings_extra_params_infoCol"))
     if((any(is.na(parsed_dates))))
     {
       Value = NULL; Time = ts(); plotType = "empty"
-      pbiInfo ="Warning: Only 'Date', 'Time', 'Date/Time' types are allowed for Time"
+      pbiInfo = cutStr2Show("Warning: Only 'Date', 'Time', 'Date/Time' types are allowed for Time", strCex = 1.2, partAvailable = 0.95)
     }
     else
       if(!is.numeric(Value[,1]))
       {
         Value = NULL; Time = ts(); plotType = "empty"
-        pbiInfo ="Warning: Only numeric types are allowed for Value"
+        pbiInfo = cutStr2Show("Warning: Only numeric types are allowed for Value", strCex = 1.2, partAvailable = 0.95)
       }
       else
         if(length(unique(Value[,1])) < minUniqueValues)
         {
           Value = NULL; Time = ts(); plotType = "empty"
-          pbiInfo ="Warning: No sufficient variance in Value"
+          pbiInfo = cutStr2Show("Warning: No sufficient variance in Value", strCex = 1.2, partAvailable = 0.95)
         }
   } 
   
@@ -587,7 +588,7 @@ if (exists("settings_extra_params_infoCol"))
   else #empty
   {
     plot.new()
-    title(main="", sub = pbiInfo, cex.sub = infoFontSize, col.sub = infoCol)
+    title(main="", sub = pbiInfo, cex.sub = 1.2, col.sub = infoCol)
   }
   
 }
