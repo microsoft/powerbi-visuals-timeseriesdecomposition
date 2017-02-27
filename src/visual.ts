@@ -106,7 +106,15 @@ module powerbi.extensibility.visual {
             if (!dataViews || dataViews.length === 0)
                 return;
 
+             if (dataViews == null)
+                return;
+
+
             let dataView: DataView = dataViews[0];
+
+            if (dataView == null)
+                return;
+
             if (!dataView || !dataView.metadata)
                 return;
 

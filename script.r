@@ -29,9 +29,9 @@ cutStr2Show = function(strText, strCex = 0.8, abbrTo = 100, isH = TRUE, maxChar 
   if(is.null(strText))
     return (NULL)
   
-  SCL = 0.075*strCex/0.8
+  SCL = 0.075 * strCex / 0.8
   pardin = par()$din
-  gStand = partAvailable*(isH*pardin[1]+(1-isH)*pardin[2]) /SCL
+  gStand = partAvailable * (isH * pardin[1] + (1 - isH) * pardin[2]) /SCL
   
   # if very very long abbreviate
   if(nchar(strText)>abbrTo && nchar(strText)> 1)
@@ -39,10 +39,10 @@ cutStr2Show = function(strText, strCex = 0.8, abbrTo = 100, isH = TRUE, maxChar 
   
   # if looooooong convert to lo...
   if(nchar(strText)>round(gStand) && nchar(strText)> 1)
-    strText = paste(substring(strText,1,floor(gStand)),"...",sep="")
+    strText = paste(substring(strText, 1, floor(gStand)), "...", sep = "")
   
   # if shorter than maxChar remove 
-  if(gStand<=maxChar)
+  if(gStand <= maxChar)
     strText = NULL
   
   return(strText) 
@@ -80,7 +80,7 @@ makeLog = function (val)
   add = 1 + max(0,min(val)) - min(val)  # heuristic
   transVal = val + add # shift to positive range (>1)
   logVal = log(transVal, base = exp(1))
-  mul = norm(val, type ="2")/ norm(logVal, type ="2")
+  mul = norm(val, type = "2")/ norm(logVal, type = "2")
   logVal =logVal*mul 
   return(list(add = add, mul = mul, logVal = logVal, base = exp(1)))
 }
@@ -88,7 +88,7 @@ makeLog = function (val)
 # invert makeLog 
 makeUnLog = function (logVal, add, mul, base = exp(1))
 {
-  transVal = exp(logVal/mul)
+  transVal = exp(logVal / mul)
   val = transVal - add 
   return(val)
 }
@@ -112,16 +112,16 @@ findFreqFromDates = function(dates, targetS = "autodetect from date")
   names(seasons) = nnn
   perSeason = seasons
   
-  seasons["day"]=round(as.numeric(difftime(dates[length(dates)],dates[1]),units="days"))
-  seasons["hour"]=round(as.numeric(difftime(dates[length(dates)],dates[1]),units="hours"))
-  seasons["week"]=round(as.numeric(difftime(dates[length(dates)],dates[1]),units="weeks"))
-  seasons["month"] = seasons["day"]/30
-  seasons["year"] = seasons["day"]/365.25
-  seasons["quater"] = seasons["year"]*4
+  seasons["day"] = round(as.numeric(difftime(dates[length(dates)], dates[1]), units="days"))
+  seasons["hour"] = round(as.numeric(difftime(dates[length(dates)], dates[1]), units="hours"))
+  seasons["week"] = round(as.numeric(difftime(dates[length(dates)], dates[1]), units="weeks"))
+  seasons["month"] = seasons["day"] / 30
+  seasons["year"] = seasons["day"] / 365.25
+  seasons["quater"] = seasons["year"] * 4
   
   perSeason = N/seasons
   
-  if(targetS!="autodetect from date" && targetS!="autodetect from date") # target 
+  if(targetS != "autodetect from date" && targetS != "autodetect from date") # target 
     freq = perSeason[targetS]
   
   if(freq < 2) # if TRUE, target season factor is not good 
@@ -137,14 +137,16 @@ findFreqFromDates = function(dates, targetS = "autodetect from date")
 #decompose into 3 components, known frequency 
 flexTSdecomposition = function(Time, vals, freq, trendSmoothness, myts, robustToOutliers, degree)
 {
+  SMOO_FACTOR = 1.43 # found experimentally do provide aesthetically pleasing results
+  
   N = length(Time)
   twin = getSTwindows(N, trendSmoothness= trendSmoothness, freq = freq)
   
-  if(freq ==1)
+  if(freq == 1)
   {
-    s = (100 * trendSmoothness / 70)
-    span = max(s,0.2) # get from t smoothness
-    fit <- loess(vals ~ seq(1,length(Time)), degree = 1 + degree, span = span)
+    s = (SMOO_FACTOR * trendSmoothness )
+    span = max(s, 0.2) # get from t smoothness
+    fit <- loess(vals ~ seq(1, length(Time)), degree = 1 + degree, span = span)
     fit$time.series.df = data.frame(seasonal = rep(0, length(Time)), trend = fit$fitted, residuals = fit$residuals, data = vals)
     
   } 
@@ -162,7 +164,7 @@ flexTSdecomposition = function(Time, vals, freq, trendSmoothness, myts, robustTo
   seasonal = fit$time.series.df[,1] + mean(fit$time.series.df[,2])
   reminder = fit$time.series.df[,3] + mean(vals)
   trend = fit$time.series.df[,2]
-  dfTSD = data.frame(clean= clean, seasonal = seasonal, trend = trend, reminder = reminder)
+  dfTSD = data.frame(clean = clean, seasonal = seasonal, trend = trend, reminder = reminder)
   return(list(fit = fit, dfTSD = dfTSD))
   
 }
@@ -184,11 +186,11 @@ nextodd = function(num)
 #get smoothness parameters for STL function
 getSTwindows = function(numSamples, trendSmoothness= 0.5, freq = 4)
 {
-  getByPos = function(arr,frac)
-    arr[max(1,round(length(arr)*frac))]
+  getByPos = function(arr, frac)
+    arr[max(1,round(length(arr) * frac))]
   
   t = nextodd(freq*1.5)# default
-  allTS = seq(3,max(7,max(t*2, nextodd(numSamples/2))), by = 2)
+  allTS = seq(3, max(7, max(t*2, nextodd(numSamples/2))), by = 2)
   return(getByPos(allTS,trendSmoothness))
 }
 
@@ -397,7 +399,7 @@ if (exists("settings_extra_params_infoCol"))
   }
   if(plotType != "empty")
   {
-    parsed_dates=strptime(Time,"%Y-%m-%dT%H:%M:%S",tz="UTC")
+    parsed_dates=strptime(Time, "%Y-%m-%dT%H:%M:%S", tz = "UTC")
     if((any(is.na(parsed_dates))))
     {
       Value = NULL; Time = ts(); plotType = "empty"
@@ -451,10 +453,10 @@ if (exists("settings_extra_params_infoCol"))
      if(is.null(mvals))
         evars = apply(dfTSD[,-1],2,FUN = explained, sig = vals)
     else
-       evars = apply(makeUnLog(dfTSD[,-1],mvals$add, mvals$mul),2,FUN = explained, sig = avals)
+       evars = apply(makeUnLog(dfTSD[,-1],mvals$add, mvals$mul), 2, FUN = explained, sig = avals)
        
     
-    evars = round(100*evars/sum(evars))
+    evars = round(100 * evars / sum(evars))
     
     if(modelType == "automatic")
     {#compute the same for additive model, compare and select one 
@@ -532,9 +534,9 @@ if (exists("settings_extra_params_infoCol"))
       
       if(!is.null(mvals))
       {
-        dfTSD[,plotType] = makeUnLog(dfTSD[,plotType],mvals$add, mvals$mul)
+        dfTSD[,plotType] = makeUnLog(dfTSD[,plotType], mvals$add, mvals$mul)
         if(plotType=="reminder")
-          dfTSD$clean = makeUnLog(dfTSD$clean,mvals$add, mvals$mul)
+          dfTSD$clean = makeUnLog(dfTSD$clean, mvals$add, mvals$mul)
       }
       m = 0; meanAvals = mean(avals)
       
