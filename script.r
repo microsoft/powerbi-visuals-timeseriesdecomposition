@@ -51,7 +51,7 @@ cutStr2Show = function(strText, strCex = 0.8, abbrTo = 100, isH = TRUE, maxChar 
 #Info string to be plotted under the chart
 CreateInfo = function(modelType, freqv, evars, plotType)
 {
-  #all, clean, trend, seasonal, reminder, byseason
+  #all, clean, trend, seasonal, remainder, byseason
   pbiInfo =""
   if(plotType == 'all')
     pbiInfo = paste(paste(names(evars), ": ", evars,"%",sep=""), collapse = ", ")
@@ -59,7 +59,7 @@ CreateInfo = function(modelType, freqv, evars, plotType)
     if(plotType %in% c('clean', 'byseasonClean'))
       pbiInfo = paste(paste('clean', ": ", 100-evars[3],"%",sep=""), collapse = ", ")
     else
-      if(plotType %in% c('trend', 'seasonal', 'reminder'))
+      if(plotType %in% c('trend', 'seasonal', 'remainder'))
         pbiInfo = paste(paste(names(evars[plotType]), ":", evars[plotType],"%",sep=""), collapse = ", ")
       else
         if(plotType == 'byseason')
@@ -107,7 +107,7 @@ findFreqFromDates = function(dates, targetS = "autodetect from date")
 {
   freq = 1
   N = length(dates)
-  nnn = c("hour", "day", "week", "month", "quater", "year")
+  nnn = c("hour", "day", "week", "month", "quarter", "year")
   seasons = rep(NaN,6)
   names(seasons) = nnn
   perSeason = seasons
@@ -117,7 +117,7 @@ findFreqFromDates = function(dates, targetS = "autodetect from date")
   seasons["week"] = round(as.numeric(difftime(dates[length(dates)], dates[1]), units="weeks"))
   seasons["month"] = seasons["day"] / 30
   seasons["year"] = seasons["day"] / 365.25
-  seasons["quater"] = seasons["year"] * 4
+  seasons["quarter"] = seasons["year"] * 4
   
   perSeason = N/seasons
   
@@ -127,7 +127,7 @@ findFreqFromDates = function(dates, targetS = "autodetect from date")
   if(freq < 2) # if TRUE, target season factor is not good 
     freq = 1
   
-  for( s in rev(nnn)) # check year --> Quater --> etc
+  for( s in rev(nnn)) # check year --> quarter --> etc
     if(freq == 1 )
       freq = freqSeason(seasons[s],perSeason[s])
   
@@ -162,9 +162,9 @@ flexTSdecomposition = function(Time, vals, freq, trendSmoothness, myts, robustTo
    
   clean = fit$time.series.df[,1] + fit$time.series.df[,2]
   seasonal = fit$time.series.df[,1] + mean(fit$time.series.df[,2])
-  reminder = fit$time.series.df[,3] + mean(vals)
+  remainder = fit$time.series.df[,3] + mean(vals)
   trend = fit$time.series.df[,2]
-  dfTSD = data.frame(clean = clean, seasonal = seasonal, trend = trend, reminder = reminder)
+  dfTSD = data.frame(clean = clean, seasonal = seasonal, trend = trend, remainder = remainder)
   return(list(fit = fit, dfTSD = dfTSD))
   
 }
@@ -257,7 +257,7 @@ if (exists("settings_model_params_modelType"))
 ##PBI_PARAM: display_name: Seasonal factor, tooltip:Specify recommended seasonal factor
 # Type: enumeration, default:'autodetect from date', 
 # Min: , Max:
-# enumeration options: autodetect from date ,none ,manual ,hour ,day ,week ,month ,quater ,year ,
+# enumeration options: autodetect from date ,none ,manual ,hour ,day ,week ,month ,quarter ,year ,
 targetSeasonality = 'autodetect from date'  #default
 if (exists("settings_model_params_targetSeasonality")) 
 {
@@ -305,7 +305,7 @@ if (exists("settings_algo_params_percentile"))
 ##PBI_PARAM: display_name: Plot type, tooltip:specify the plot type
 # Type: enumeration, default:'all', 
 # Min: , Max:
-# enumeration options: all ,trend ,seasonal ,clean ,reminder ,byseason ,byseasonClean ,
+# enumeration options: all ,trend ,seasonal ,clean ,remainder ,byseason ,byseasonClean ,
 plotType = 'all'  #default
 if (exists("settings_plot_params_plotType")) 
 {
@@ -493,12 +493,12 @@ if (exists("settings_extra_params_infoCol"))
   if(plotType == "all" )
   {
     if(is.null(mvals))
-      mts0 = data.frame(data=vals, seasonal = dfTSD$seasonal  , trend=dfTSD$trend, reminder = vals- dfTSD$clean)
+      mts0 = data.frame(data=vals, seasonal = dfTSD$seasonal  , trend=dfTSD$trend, remainder = vals- dfTSD$clean)
     else
     {
       mts0 = data.frame(data=avals, seasonal =  makeUnLog(dfTSD$seasonal, mvals$add, mvals$mul)  , 
                    trend=makeUnLog(dfTSD$trend,mvals$add, mvals$mul))
-      mts0$reminder = mts0$data - makeUnLog(dfTSD$clean,mvals$add, mvals$mul)
+      mts0$remainder = mts0$data - makeUnLog(dfTSD$clean,mvals$add, mvals$mul)
     }
    
     
@@ -521,7 +521,7 @@ if (exists("settings_extra_params_infoCol"))
     title(main="", sub = pbiInfo, cex.sub = infoFontSize, col.sub = infoCol)
   }
   else
-    if((plotType %in% c("clean","trend", "reminder", "seasonal"))) # clean, trend, reminder
+    if((plotType %in% c("clean","trend", "remainder", "seasonal"))) # clean, trend, remainder
     {
       myts_zoo = as.zoo(mytsAdd)# changed to zoo type because it allows to replace dates
       time(myts_zoo) = parsed_dates
@@ -535,12 +535,12 @@ if (exists("settings_extra_params_infoCol"))
       if(!is.null(mvals))
       {
         dfTSD[,plotType] = makeUnLog(dfTSD[,plotType], mvals$add, mvals$mul)
-        if(plotType=="reminder")
+        if(plotType=="remainder")
           dfTSD$clean = makeUnLog(dfTSD$clean, mvals$add, mvals$mul)
       }
       m = 0; meanAvals = mean(avals)
       
-      dfTSD$reminder = avals - dfTSD$clean + meanAvals
+      dfTSD$remainder = avals - dfTSD$clean + meanAvals
       
       dfTSD <- ts(dfTSD, start = as.Date(min(Time)), frequency= freqv)
       

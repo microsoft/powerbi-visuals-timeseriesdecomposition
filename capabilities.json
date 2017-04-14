@@ -121,8 +121,8 @@
 								"value" : "month"
 							},
 							{
-								"displayName" : "quater",
-								"value" : "quater"
+								"displayName" : "quarter",
+								"value" : "quarter"
 							},
 							{
 								"displayName" : "year",
@@ -193,8 +193,8 @@
 								"value" : "clean"
 							},
 							{
-								"displayName" : "reminder",
-								"value" : "reminder"
+								"displayName" : "remainder",
+								"value" : "remainder"
 							},
 							{
 								"displayName" : "by season",
