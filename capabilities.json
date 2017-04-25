@@ -1,0 +1,294 @@
+{
+	"dataRoles" : [
+		{
+			"displayName" : "Time",
+			"description" : "Time column",
+			"kind" : "Grouping",
+			"name" : "Time"
+		},
+		{
+			"displayName" : "Value",
+			"description" : "Numeric column",
+			"kind" : "Measure",
+			"name" : "Value"
+		}
+	],
+	"dataViewMappings" : [
+		{
+			"conditions" : [
+				{
+					"Time" : {
+						"max" : 1
+					},
+					"Value" : {
+						"max" : 1
+					}
+				}
+			],
+			"scriptResult" : {
+				"dataInput" : {
+					"table" : {
+						"rows" : {
+							"select" : [
+								{
+									"for" : {
+										"in" : "Time"
+									}
+								},
+								{
+									"for" : {
+										"in" : "Value"
+									}
+								}
+							],
+							"dataReductionAlgorithm" : {
+								"top" : {}
+							}
+						}
+					}
+				},
+				"script" : {
+					"scriptProviderDefault" : "R",
+					"scriptOutputType" : "png",
+					"source" : {
+						"objectName" : "rcv_script",
+						"propertyName" : "source"
+					},
+					"provider" : {
+						"objectName" : "rcv_script",
+						"propertyName" : "provider"
+					}
+				}
+			}
+		}
+	],
+	"objects" : {
+		"settings_model_params" : {
+			"displayName" : "Time series model",
+			"description" : "Adjust the type of decomposition and the seasonality",
+			"properties" : {
+				"modelType" : {
+					"displayName" : "Decomposition model",
+					"description" : "Switch between additive and multiplicative decomposition models ",
+					"type" : {
+						"enumeration" : [
+							{
+								"displayName" : "additive",
+								"value" : "additive"
+							},
+							{
+								"displayName" : "multiplicative",
+								"value" : "multiplicative"
+							},
+							{
+								"displayName" : "automatic",
+								"value" : "automatic"
+							}
+						]
+					}
+				},
+				"targetSeasonality" : {
+					"displayName" : "Seasonal factor",
+					"description" : "Specify recommended seasonal factor",
+					"type" : {
+						"enumeration" : [
+							{
+								"displayName" : "autodetect from date",
+								"value" : "autodetect from date"
+							},
+							{
+								"displayName" : "none",
+								"value" : "none"
+							},
+							{
+								"displayName" : "manual",
+								"value" : "manual"
+							},
+							{
+								"displayName" : "hour",
+								"value" : "hour"
+							},
+							{
+								"displayName" : "day",
+								"value" : "day"
+							},
+							{
+								"displayName" : "week",
+								"value" : "week"
+							},
+							{
+								"displayName" : "month",
+								"value" : "month"
+							},
+							{
+								"displayName" : "quarter",
+								"value" : "quarter"
+							},
+							{
+								"displayName" : "year",
+								"value" : "year"
+							}
+						]
+					}
+				},
+				"freq" : {
+					"displayName" : "Frequency",
+					"description" : "Number of samples per season",
+					"type" : {
+						"numeric" : true
+					}
+				}
+			}
+		},
+		"settings_algo_params" : {
+			"displayName" : "Algorithm parameters",
+			"description" : "Modify parameters for 'Seasonal Decomposition of Time Series using Loess'",
+			"properties" : {
+				"degree" : {
+					"displayName" : "Degree",
+					"description" : "Degree of locally-fitted polynomial in seasonal extraction and trend extraction",
+					"type" : {
+						"bool" : true
+					}
+				},
+				"robustToOutliers" : {
+					"displayName" : "Robust to outliers",
+					"description" : "Indicates whether robust fitting will be used in the Loess procedure",
+					"type" : {
+						"bool" : true
+					}
+				},
+				"percentile" : {
+					"displayName" : "Trend smoothness",
+					"description" : "Trend smoothness",
+					"type" : {
+						"numeric" : true
+					}
+				}
+			}
+		},
+		"settings_plot_params" : {
+			"displayName" : "Graphical parameters",
+			"description" : "Select the plot type and visualisation attributes",
+			"properties" : {
+				"plotType" : {
+					"displayName" : "Plot type",
+					"description" : "specify the plot type",
+					"type" : {
+						"enumeration" : [
+							{
+								"displayName" : "decomposition",
+								"value" : "all"
+							},
+							{
+								"displayName" : "trend",
+								"value" : "trend"
+							},
+							{
+								"displayName" : "seasonal",
+								"value" : "seasonal"
+							},
+							{
+								"displayName" : "clean",
+								"value" : "clean"
+							},
+							{
+								"displayName" : "remainder",
+								"value" : "remainder"
+							},
+							{
+								"displayName" : "by season",
+								"value" : "byseason"
+							},
+							{
+								"displayName" : "by season clean",
+								"value" : "byseasonClean"
+							}
+						]
+					}
+				},
+				"weight" : {
+					"displayName" : "Line width",
+					"description" : "line width",
+					"type" : {
+						"numeric" : true
+					}
+				},
+				"lineCol" : {
+					"displayName" : "Line color",
+					"description" : "line color",
+					"type" : {
+						"fill" : {
+							"solid" : {
+								"color" : true
+							}
+						}
+					}
+				},
+				"labelsCol" : {
+					"displayName" : "Labels color",
+					"description" : "labels color",
+					"type" : {
+						"fill" : {
+							"solid" : {
+								"color" : true
+							}
+						}
+					}
+				},
+				"textSize" : {
+					"displayName" : "Labels font size",
+					"description" : "labels font size",
+					"type" : {
+						"numeric" : true
+					}
+				}
+			}
+		},
+		"settings_extra_params" : {
+			"displayName" : "Show information",
+			"description" : " Show infromation and warnings",
+			"properties" : {
+				"show" : {
+					"type" : {
+						"bool" : true
+					}
+				},
+				"textSize" : {
+					"displayName" : "Font size",
+					"type" : {
+						"numeric" : true
+					}
+				},
+				"infoCol" : {
+					"displayName" : "Text color",
+					"description" : "Text color",
+					"type" : {
+						"fill" : {
+							"solid" : {
+								"color" : true
+							}
+						}
+					}
+				}
+			}
+		},
+		"rcv_script" : {
+			"properties" : {
+				"provider" : {
+					"type" : {
+						"text" : true
+					}
+				},
+				"source" : {
+					"type" : {
+						"scripting" : {
+							"source" : true
+						}
+					}
+				}
+			}
+		}
+	},
+	"suppressDefaultTitle" : true
+}
