@@ -24,3 +24,5 @@ out.html_files
 out.html_files/*
 dist
 dist/*
+.tmp
+.tmp/*
